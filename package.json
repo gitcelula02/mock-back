@@ -1,0 +1,12 @@
+{
+  "name": "scrumbhub-mock-api",
+  "version": "1.0.0",
+  "description": "JSON Server mock API for ScrumHub frontend development",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js --watch"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}

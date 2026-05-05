@@ -1,0 +1,76 @@
+{
+  "/api/auth/login": "/auth/login",
+  "/api/auth/register": "/auth/register",
+  "/api/auth/logout": "/auth/logout",
+  "/api/auth/me": "/auth/me",
+
+  "/api/users": "/users",
+  "/api/users/:id": "/users/:id",
+  "/api/users/:id/scrum-roles": "/scrum_role_preferences?user_id=:id",
+  "/api/users/:id/scrum-roles/:roleId": "/scrum_role_preferences/:roleId",
+
+  "/api/projects/all": "/projects",
+  "/api/projects/:id": "/projects/:id",
+  "/api/projects": "/projects",
+  "/api/projects/:id/members": "/project_members?project_id=:id",
+  "/api/projects/:id/members/:userId": "/project_members?project_id=:id&user_id=:userId",
+  "/api/projects/:id/stats": "/projects/:id/stats",
+  "/api/projects/:id/sprints": "/sprints?project_id=:id",
+  "/api/projects/:id/statuses": "/statuses?project_id=:id",
+  "/api/projects/:id/statuses/:statusId": "/statuses/:statusId",
+  "/api/projects/:id/boards": "/boards/:id",
+  "/api/projects/:id/chatroom": "/chatrooms?project_id=:id",
+  "/api/projects/:id/daily-standups": "/daily_standups?project_id=:id",
+
+  "/api/tasks": "/tasks",
+  "/api/tasks/my-tasks": "/task_assignees",
+  "/api/tasks/:id": "/tasks/:id",
+  "/api/tasks/:id/subtasks": "/tasks?parent_id=:id",
+  "/api/tasks/:id/assignees": "/task_assignees?task_id=:id",
+  "/api/tasks/:id/dependencies": "/task_dependencies?task_id=:id",
+  "/api/tasks/:id/comments": "/comments?task_id=:id",
+  "/api/tasks/:id/attachments": "/attachments?task_id=:id",
+  "/api/tasks/:id/acceptance-criteria": "/acceptance_criteria?task_id=:id",
+
+  "/api/sprints/:id": "/sprints/:id",
+  "/api/sprints/:id/tasks": "/tasks?sprint_id=:id",
+  "/api/sprints/:id/retrospective": "/retrospectives?sprint_id=:id",
+  "/api/retrospectives/:id": "/retrospectives/:id",
+
+  "/api/chatrooms/:id/channels": "/channels?chatroom_id=:id",
+  "/api/channels/:id": "/channels/:id",
+  "/api/channels/:id/messages": "/messages?channel_id=:id",
+  "/api/channels/:id/voice-sessions": "/voice_sessions?channel_id=:id",
+
+  "/api/messages/:id": "/messages/:id",
+
+  "/api/voice-sessions/:id": "/voice_sessions/:id",
+
+  "/api/daily-standups/:id": "/daily_standups/:id",
+  "/api/daily-standups/:id/transcribe": "/daily_standups/:id/transcribe",
+
+  "/api/settings": "/settings",
+  "/api/settings/:id": "/settings/:id",
+
+  "/api/users/:id": "/users/:id",
+
+  "/subscription": "/subscriptions?user_id=1",
+  "/subscription/credits": "/subscriptions?user_id=1",
+
+  "/api-keys": "/api_keys?user_id=1",
+  "/api-keys/:id": "/api_keys/:id",
+
+  "/notifications": "/notifications?user_id=1",
+  "/notifications/:id/read": "/notifications/:id",
+  "/notifications/read-all": "/notifications?user_id=1",
+  "/notification-preferences": "/notification_preferences?user_id=1",
+
+  "/ai/chat": "/ai/chat",
+  "/ai/sessions": "/ai_chat_sessions?user_id=1",
+  "/ai/sessions/:id": "/ai_chat_sessions/:id",
+  "/ai/sessions/:id/messages": "/ai_chat_messages?session_id=:id",
+  "/ai/transcribe": "/ai/transcribe",
+  "/ai/search": "/ai/search",
+
+  "/api/*": "/$1"
+}
