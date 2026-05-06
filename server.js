@@ -1,4 +1,5 @@
 const jsonServer = require('json-server');
+const bcrypt = require('bcrypt');
 const path = require('path');
 
 const server = jsonServer.create();
@@ -20,6 +21,33 @@ server.use((req, res, next) => {
     req.body.updated_at = new Date().toISOString();
   }
   next();
+});
+
+server.post('/api/auth/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({
+      error: { code: 'VALIDATION_ERROR', message: 'Email and password are required' }
+    });
+  }
+  const user = router.db.get('users').find({ email }).value();
+  if (!user) {
+    return res.status(401).json({
+      error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' }
+    });
+  }
+  const valid = await bcrypt.compare(password, user.password_hash);
+  if (!valid) {
+    return res.status(401).json({
+      error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' }
+    });
+  }
+  res.json({
+    data: {
+      token: 'mock-jwt-token-' + user.id,
+      user: { id: user.id, username: user.username, email: user.email, avatar_url: user.avatar_url }
+    }
+  });
 });
 
 server.use(rewriter);
