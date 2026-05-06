@@ -50,6 +50,26 @@ server.post('/api/auth/login', async (req, res) => {
   });
 });
 
+server.get('/api/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id, 10);
+  const task = router.db.get('tasks').find({ id: taskId }).value();
+  if (!task) {
+    return res.status(404).json({
+      error: { code: 'NOT_FOUND', message: 'Task not found' }
+    });
+  }
+  const include = req.query.include ? req.query.include.split(',') : [];
+  const result = { ...task };
+  if (include.includes('comments')) {
+    const comments = router.db.get('comments').filter({ task_id: taskId }).value();
+    result.comments = comments.map(c => {
+      const author = router.db.get('users').find({ id: c.user_id }).value();
+      return { ...c, user: author ? { id: author.id, username: author.username, avatar_url: author.avatar_url } : null };
+    });
+  }
+  res.json({ data: result });
+});
+
 server.use(rewriter);
 server.use(router);
 
