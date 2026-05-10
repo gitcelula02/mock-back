@@ -9,6 +9,10 @@
   "/api/users/:id/scrum-roles": "/scrum_role_preferences?user_id=:id",
   "/api/users/:id/scrum-roles/:roleId": "/scrum_role_preferences/:roleId",
 
+  "/api/users/:userId/folders/:folderId/projects": "/user_folder_projects?user_id=:userId&folder_id=:folderId",
+  "/api/users/:userId/projects/pinned": "/user_folder_projects?user_id=:userId&is_pinned=true",
+  "/api/users/:userId/projects/search": "/user_folder_projects?user_id=:userId",
+
   "/api/projects/all": "/projects",
   "/api/projects/:id": "/projects/:id",
   "/api/projects": "/projects",

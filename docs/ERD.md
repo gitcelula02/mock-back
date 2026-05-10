@@ -28,6 +28,8 @@ This document defines the pure data structure and relationships. No technology s
 - One User can create many ApiKeyVaults (one-to-many)
 - One User can have one Subscription (one-to-one)
 - One User can have many Notifications (one-to-many)
+- One User can have many UserFolders (one-to-many)
+- One User can have one UserExplorerState (one-to-one)
 
 **JSON Example:**
 ```json
@@ -77,6 +79,8 @@ This document defines the pure data structure and relationships. No technology s
 | id | INT | Primary Key |
 | name | String | Project name |
 | description | String | Markdown description |
+| goal | String | Markdown description of what the project aims to achieve |
+| icon | String | Emoji icon for the project |
 | color | String | User-defined hex color for entity theme |
 | status | String | "active" / "archived" / "completed" |
 | created_by_user_id | INT | Foreign Key → User (project creator = first admin) |
@@ -89,6 +93,7 @@ This document defines the pure data structure and relationships. No technology s
 - One Project has many Sprints (one-to-many)
 - One Project has one Chatroom (one-to-one)
 - One Project has many Settings (one-to-many, polymorphic)
+- One Project has many ProjectCustomSections (one-to-many)
 
 **JSON Example:**
 ```json
@@ -96,6 +101,8 @@ This document defines the pure data structure and relationships. No technology s
   "id": 1,
   "name": "ScrumHub Frontend",
   "description": "# Project Overview\n\nBuilding the React frontend...",
+  "goal": "Build a comprehensive project management platform that enables agile teams to collaborate efficiently.",
+  "icon": "📘",
   "color": "#3B6D11",
   "status": "active",
   "created_by_user_id": 1,
@@ -910,6 +917,137 @@ This document defines the pure data structure and relationships. No technology s
 
 ---
 
+## User Folder Entities
+
+### UserFolder
+
+**Purpose:** User-defined folder structure for organizing projects
+
+**Attributes:**
+| Field | Type | Description |
+|-------|------|-------------|
+| id | STRING | Primary Key (UUID) |
+| user_id | STRING | Foreign Key → User |
+| parent_id | STRING | Foreign Key → UserFolder (null for root folders) |
+| name | String | Folder name |
+| order_index | INT | Display ordering |
+| created_at | DateTime | Creation timestamp |
+| updated_at | DateTime | Last update timestamp |
+
+**Relationships:**
+- One User has many UserFolders (one-to-many)
+- One UserFolder has many UserFolderProjects (one-to-many)
+- One UserFolder can have many child UserFolders (self-referencing one-to-many)
+
+**JSON Example:**
+```json
+{
+  "id": "folder-1",
+  "user_id": "1",
+  "parent_id": null,
+  "name": "AI Projects",
+  "order_index": 0,
+  "created_at": "2024-01-20T10:00:00Z",
+  "updated_at": "2024-01-20T10:00:00Z"
+}
+```
+
+---
+
+### UserFolderProject
+
+**Purpose:** Junction table linking UserFolders to Projects (many-to-many with user scope)
+
+**Attributes:**
+| Field | Type | Description |
+|-------|------|-------------|
+| id | STRING | Primary Key (UUID) |
+| user_id | STRING | Foreign Key → User |
+| folder_id | STRING | Foreign Key → UserFolder (null = root/unfiled) |
+| project_id | STRING | Foreign Key → Project |
+| order_index | INT | Display ordering within folder |
+| is_pinned | Boolean | Quick access pin |
+| created_at | DateTime | Creation timestamp |
+
+**Relationships:**
+- One UserFolder has many UserFolderProjects (one-to-many)
+- One Project has many UserFolderProjects (one-to-many)
+
+**JSON Example:**
+```json
+{
+  "id": "ufp-1",
+  "user_id": "1",
+  "folder_id": "folder-1",
+  "project_id": "proj-1",
+  "order_index": 0,
+  "is_pinned": true,
+  "created_at": "2024-01-20T10:00:00Z"
+}
+```
+
+---
+
+### ProjectCustomSection
+
+**Purpose:** User-defined key-value metadata for projects (used for RAG context in AI features)
+
+**Attributes:**
+| Field | Type | Description |
+|-------|------|-------------|
+| id | STRING | Primary Key (UUID) |
+| project_id | STRING | Foreign Key → Project |
+| user_id | STRING | Foreign Key → User (creator) |
+| key | String | Section key (e.g., "vision", "mission", "goals", "brand_guidelines") |
+| value | String | Section content (markdown) |
+| order_index | INT | Display ordering |
+| created_at | DateTime | Creation timestamp |
+| updated_at | DateTime | Last update timestamp |
+
+**JSON Example:**
+```json
+{
+  "id": "pcs-1",
+  "project_id": "proj-1",
+  "user_id": "1",
+  "key": "vision",
+  "value": "Our vision is to become the leading platform for agile team collaboration...",
+  "order_index": 0,
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z"
+}
+```
+
+---
+
+### UserExplorerState
+
+**Purpose:** UI state for project explorer (expanded folders, view size, active folder, last opened project). Stored in localStorage but synced to backend.
+
+**Attributes:**
+| Field | Type | Description |
+|-------|------|-------------|
+| id | STRING | Primary Key (UUID) |
+| user_id | STRING | Foreign Key → User (one-to-one) |
+| expanded_folder_ids | ARRAY | Array of expanded folder IDs |
+| active_folder_id | STRING | Currently selected folder ID |
+| view_size | String | "compact" / "medium" / "big" |
+| last_opened_project_id | STRING | Last opened project ID |
+
+**JSON Example:**
+```json
+{
+  "id": "ues-1",
+  "user_id": "1",
+  "expanded_folder_ids": ["folder-1", "folder-2"],
+  "active_folder_id": "folder-1",
+  "view_size": "medium",
+  "last_opened_project_id": "proj-1"
+}
+```
+
+---
+
 ## Entity Relationship Summary
 
 ```
@@ -922,7 +1060,11 @@ User
 ├── NotificationPreference (1→many)
 ├── AIChatSession (1→many)
 │   └── AIChatMessage (1→many)
-└── AITranscription (1→many)
+├── AITranscription (1→many)
+├── UserFolder (1→many)
+│   └── UserFolderProject (1→many)
+│       └── Project (1→many)
+└── UserExplorerState (1→1)
 
 Project
 ├── ProjectMember (1→many)
@@ -937,7 +1079,8 @@ Project
 │   │       └── AITranscription (1→many)
 │   └── DailyStandup (1→1)
 ├── Settings (1→many, polymorphic)
-└── AITranscription (1→many)
+├── AITranscription (1→many)
+└── ProjectCustomSection (1→many)
 
 Sprint
 ├── Task (1→many)

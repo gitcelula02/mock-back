@@ -65,6 +65,8 @@
       "id": 1,
       "name": "ScrumHub Platform",
       "description": "# Project Overview\n\nBuilding the React frontend for ScrumHub project management tool.",
+      "goal": "Build a comprehensive project management platform that enables agile teams to collaborate efficiently using Scrum methodologies.",
+      "icon": "📘",
       "color": "#3B6D11",
       "status": "active",
       "created_by_user_id": 1,
@@ -75,6 +77,8 @@
       "id": 2,
       "name": "Mobile App",
       "description": "Aplicación móvil para gestión de proyectos en campo",
+      "goal": "Create a mobile-first experience for field teams to manage projects, track tasks, and collaborate on-the-go.",
+      "icon": "📱",
       "color": "#7C3AED",
       "status": "active",
       "created_by_user_id": 1,
@@ -85,6 +89,8 @@
       "id": 3,
       "name": "API Integration",
       "description": "Integración con servicios externos y APIs de terceros",
+      "goal": "Establish robust integrations with third-party services enabling seamless data flow and extended platform capabilities.",
+      "icon": "🔌",
       "color": "#059669",
       "status": "planning",
       "created_by_user_id": 2,
@@ -763,6 +769,152 @@
       "project_id": 1,
       "text": "Yesterday I worked on the OAuth integration. Today I'll finish the callback handler and start on the token refresh logic. No blockers.",
       "created_at": "2024-06-18T09:25:00Z"
+    }
+  ],
+  "user_folders": [
+    {
+      "id": "folder-1",
+      "user_id": "1",
+      "parent_id": null,
+      "name": "AI Projects",
+      "order_index": 0,
+      "created_at": "2024-01-20T10:00:00Z",
+      "updated_at": "2024-01-20T10:00:00Z"
+    },
+    {
+      "id": "folder-2",
+      "user_id": "1",
+      "parent_id": "folder-1",
+      "name": "GPT Models",
+      "order_index": 0,
+      "created_at": "2024-02-01T10:00:00Z",
+      "updated_at": "2024-02-01T10:00:00Z"
+    },
+    {
+      "id": "folder-3",
+      "user_id": "1",
+      "parent_id": null,
+      "name": "Mobile & Web",
+      "order_index": 1,
+      "created_at": "2024-02-15T10:00:00Z",
+      "updated_at": "2024-02-15T10:00:00Z"
+    },
+    {
+      "id": "folder-4",
+      "user_id": "2",
+      "parent_id": null,
+      "name": "Work Projects",
+      "order_index": 0,
+      "created_at": "2024-03-01T10:00:00Z",
+      "updated_at": "2024-03-01T10:00:00Z"
+    }
+  ],
+  "user_folder_projects": [
+    {
+      "id": "ufp-1",
+      "user_id": "1",
+      "folder_id": "folder-1",
+      "project_id": 1,
+      "order_index": 0,
+      "is_pinned": true,
+      "created_at": "2024-01-20T10:00:00Z"
+    },
+    {
+      "id": "ufp-2",
+      "user_id": "1",
+      "folder_id": "folder-2",
+      "project_id": 2,
+      "order_index": 0,
+      "is_pinned": false,
+      "created_at": "2024-02-01T10:00:00Z"
+    },
+    {
+      "id": "ufp-3",
+      "user_id": "1",
+      "folder_id": "folder-3",
+      "project_id": 3,
+      "order_index": 0,
+      "is_pinned": false,
+      "created_at": "2024-02-15T10:00:00Z"
+    },
+    {
+      "id": "ufp-4",
+      "user_id": "2",
+      "folder_id": "folder-4",
+      "project_id": 1,
+      "order_index": 0,
+      "is_pinned": false,
+      "created_at": "2024-03-01T10:00:00Z"
+    }
+  ],
+  "project_custom_sections": [
+    {
+      "id": "pcs-1",
+      "project_id": "proj-1",
+      "user_id": "1",
+      "key": "vision",
+      "value": "Our vision is to become the leading platform for agile team collaboration, empowering teams to deliver exceptional products through data-driven insights and seamless communication.",
+      "order_index": 0,
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "pcs-2",
+      "project_id": "proj-1",
+      "user_id": "1",
+      "key": "mission",
+      "value": "Our mission is to simplify agile project management by providing intuitive tools that adapt to team workflows rather than forcing teams to adapt to rigid processes.",
+      "order_index": 1,
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "pcs-3",
+      "project_id": "proj-1",
+      "user_id": "1",
+      "key": "goals",
+      "value": "1. Achieve 10,000 active teams by EOY\n2. Launch mobile app with offline support\n3. Integrate with 20+ third-party services\n4. Establish enterprise tier with SSO",
+      "order_index": 2,
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-06-01T10:00:00Z"
+    },
+    {
+      "id": "pcs-4",
+      "project_id": "proj-2",
+      "user_id": "1",
+      "key": "vision",
+      "value": "Empower field teams with real-time project access and collaboration tools that work reliably in low-connectivity environments.",
+      "order_index": 0,
+      "created_at": "2024-02-10T09:00:00Z",
+      "updated_at": "2024-02-10T09:00:00Z"
+    },
+    {
+      "id": "pcs-5",
+      "project_id": "proj-3",
+      "user_id": "2",
+      "key": "brand_guidelines",
+      "value": "Primary: #059669 (Emerald)\nSecondary: #10B981 (Green)\nAccent: #3B82F6 (Blue)\nFont: Inter for UI, JetBrains Mono for code",
+      "order_index": 0,
+      "created_at": "2024-03-05T10:00:00Z",
+      "updated_at": "2024-03-05T10:00:00Z"
+    }
+  ],
+  "user_explorer_states": [
+    {
+      "id": "ues-1",
+      "user_id": "1",
+      "expanded_folder_ids": ["folder-1", "folder-2"],
+      "active_folder_id": "folder-1",
+      "view_size": "medium",
+      "last_opened_project_id": "proj-1"
+    },
+    {
+      "id": "ues-2",
+      "user_id": "2",
+      "expanded_folder_ids": ["folder-4"],
+      "active_folder_id": null,
+      "view_size": "compact",
+      "last_opened_project_id": null
     }
   ]
 }

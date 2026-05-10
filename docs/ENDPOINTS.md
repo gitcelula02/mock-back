@@ -10,20 +10,21 @@ This document defines all API endpoints for the ScrumHub backend. Based on the E
 2. [Authentication](#authentication)
 3. [Users](#users)
 4. [Projects](#projects)
-5. [Tasks (Epic, Story, Task, Subtask)](#tasks-epic-story-task-subtask)
-6. [Sprints](#sprints)
-7. [Status (Kanban)](#status-kanban)
-8. [Chatroom & Channels](#chatroom--channels)
-9. [Messages](#messages)
-10. [Voice Sessions](#voice-sessions)
-11. [Daily Standups](#daily-standups)
-12. [Retrospectives](#retrospectives)
-13. [Settings (Polymorphic)](#settings-polymorphic)
-14. [AI Chat & RAG](#ai-chat--rag)
-15. [Subscriptions & Credits](#subscriptions--credits)
-16. [API Keys (Vault)](#api-keys-vault)
-17. [Notifications](#notifications)
-18. [Priority Order](#priority-order-for-implementation)
+5. [User Folders & Projects](#user-folders--projects)
+6. [Tasks (Epic, Story, Task, Subtask)](#tasks-epic-story-task-subtask)
+7. [Sprints](#sprints)
+8. [Status (Kanban)](#status-kanban)
+9. [Chatroom & Channels](#chatroom--channels)
+10. [Messages](#messages)
+11. [Voice Sessions](#voice-sessions)
+12. [Daily Standups](#daily-standups)
+13. [Retrospectives](#retrospectives)
+14. [Settings (Polymorphic)](#settings-polymorphic)
+15. [AI Chat & RAG](#ai-chat--rag)
+16. [Subscriptions & Credits](#subscriptions--credits)
+17. [API Keys (Vault)](#api-keys-vault)
+18. [Notifications](#notifications)
+19. [Priority Order](#priority-order-for-implementation)
 
 ---
 
@@ -205,7 +206,7 @@ Query params: `?include=members,stats`
 ### POST /api/projects
 **Request:**
 ```json
-{ "name": "New Project", "description": "...", "color": "#8B5CF6" }
+{ "name": "New Project", "description": "...", "goal": "...", "icon": "📘", "color": "#8B5CF6" }
 ```
 
 ### PUT /api/projects/:id
@@ -253,6 +254,177 @@ Query params: `?include=members,stats`
   }
 }
 ```
+
+### GET /api/projects/:id/custom-sections
+**Response:** `200`
+```json
+{
+  "data": [
+    { "id": "pcs-1", "key": "vision", "value": "Our vision is...", "order_index": 0 },
+    { "id": "pcs-2", "key": "mission", "value": "Our mission is...", "order_index": 1 }
+  ]
+}
+```
+
+### POST /api/projects/:id/custom-sections
+**Request:**
+```json
+{ "key": "brand_guidelines", "value": "Colors: #hex...", "order_index": 2 }
+```
+
+### PUT /api/projects/:id/custom-sections/:sectionId
+**Request:** `{ "key": "updated_key", "value": "Updated content", "order_index": 1 }`
+
+### DELETE /api/projects/:id/custom-sections/:sectionId
+**Response:** `204`
+
+---
+
+## User Folders & Projects
+
+### GET /api/users/:userId/folders
+Get user's folder tree.
+**Response:** `200`
+```json
+{
+  "data": [
+    { "id": "folder-1", "user_id": "1", "parent_id": null, "name": "AI Projects", "order_index": 0, "created_at": "...", "updated_at": "..." }
+  ]
+}
+```
+
+### POST /api/users/:userId/folders
+Create a new folder.
+**Request:**
+```json
+{ "name": "New Folder", "parent_id": "folder-1" }
+```
+**Response:** `201`
+```json
+{ "data": { "id": "folder-new", "user_id": "1", "parent_id": "folder-1", "name": "New Folder", "order_index": 1, "created_at": "...", "updated_at": "..." } }
+```
+
+### PATCH /api/folders/:folderId
+Update folder (rename, move, reorder).
+**Request:**
+```json
+{ "name": "Updated Name", "parent_id": "folder-2", "order_index": 0 }
+```
+**Response:** `200`
+
+### DELETE /api/folders/:folderId
+Delete folder and reparent children to parent folder. Returns `204`.
+
+### GET /api/users/:userId/projects
+Get user's projects in folder structure with pinned projects.
+**Response:** `200`
+```json
+{
+  "data": [
+    {
+      "id": "folder-1",
+      "name": "AI Projects",
+      "parent_id": null,
+      "order_index": 0,
+      "children": [
+        { "id": "folder-2", "name": "GPT Models", "parent_id": "folder-1", "order_index": 0, "children": [], "projects": [...] }
+      ],
+      "projects": [
+        { "id": "proj-1", "name": "GPT-4 Fine-tune", "color": "#3B82F6", "icon": "🤖", "status": "active" }
+      ]
+    }
+  ],
+  "pinned": [
+    { "id": "proj-2", "name": "ScrumHub", "color": "#10B981", "icon": "📘", "status": "active" }
+  ]
+}
+```
+
+### POST /api/users/:userId/folders/:folderId/projects
+Add existing project to folder.
+**Request:**
+```json
+{ "project_id": "proj-5" }
+```
+**Response:** `201`
+```json
+{ "data": { "folder_project_id": "ufp-new", "project_id": "proj-5", "folder_id": "folder-1" } }
+```
+
+### DELETE /api/users/:userId/folders/:folderId/projects/:projectId
+Remove project from folder (not delete project).
+**Response:** `200`
+```json
+{ "data": { "project_id": "proj-5", "folder_id": "folder-1", "deleted": true } }
+```
+
+### PATCH /api/users/:userId/projects/:projectId/move
+Move project to different folder or root.
+**Request:**
+```json
+{ "folder_id": "folder-2" }
+```
+or to move to root (unfolder):
+```json
+{ "folder_id": null }
+```
+**Response:** `200`
+
+### POST /api/users/:userId/projects/:projectId/pin
+Pin project to quick access.
+**Response:** `200`
+
+### DELETE /api/users/:userId/projects/:projectId/pin
+Unpin project.
+**Response:** `200`
+
+### GET /api/users/:userId/projects/pinned
+Get all pinned projects.
+**Response:** `200`
+```json
+{
+  "data": [
+    { "id": "proj-1", "name": "GPT-4 Fine-tune", "color": "#3B82F6", "icon": "🤖", "status": "active" }
+  ]
+}
+```
+
+### GET /api/users/:userId/projects/search
+Search projects by name and description.
+Query params: `?q=searchterm`
+**Response:** `200`
+```json
+{
+  "data": [
+    { "id": "proj-1", "name": "GPT-4 Fine-tune", "description": "...", "color": "#3B82F6", "icon": "🤖", "status": "active", "folder_id": "folder-1", "folder_name": "AI Projects" },
+    { "id": "proj-5", "name": "Unfiled Project", "description": "...", "color": "#059669", "icon": "📦", "status": "active", "folder_id": null, "folder_name": null }
+  ]
+}
+```
+
+### GET /api/users/:userId/explorer-state
+Get user's explorer UI state (stored in localStorage but synced).
+**Response:** `200`
+```json
+{
+  "data": {
+    "id": "ues-1",
+    "user_id": "1",
+    "expanded_folder_ids": ["folder-1", "folder-2"],
+    "active_folder_id": "folder-1",
+    "view_size": "medium",
+    "last_opened_project_id": "proj-1"
+  }
+}
+```
+
+### PATCH /api/users/:userId/explorer-state
+Update explorer UI state.
+**Request:**
+```json
+{ "expanded_folder_ids": ["folder-1"], "active_folder_id": "folder-2", "view_size": "compact", "last_opened_project_id": "proj-3" }
+```
+**Response:** `200`
 
 ---
 
