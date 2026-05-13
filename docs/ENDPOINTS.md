@@ -12,9 +12,11 @@ This document defines all API endpoints for the ScrumHub backend. Based on the E
 4. [Projects](#projects)
 5. [User Folders & Projects](#user-folders--projects)
 6. [Tasks (Epic, Story, Task, Subtask)](#tasks-epic-story-task-subtask)
-7. [Sprints](#sprints)
-8. [Status (Kanban)](#status-kanban)
-9. [Chatroom & Channels](#chatroom--channels)
+7. [Backlog Types](#backlog-types)
+8. [Backlogs](#backlogs)
+9. [Sprints](#sprints)
+10. [Status (Kanban)](#status-kanban)
+11. [Chatroom & Channels](#chatroom--channels)
 10. [Messages](#messages)
 11. [Voice Sessions](#voice-sessions)
 12. [Daily Standups](#daily-standups)
@@ -551,6 +553,60 @@ Multipart form — file upload.
 **Request:** `{ "is_marked": true }`
 
 ### DELETE /api/tasks/:id/acceptance-criteria/:acId
+
+---
+
+## Backlog Types
+
+### GET /api/backlog-types
+**Response:** `200`
+```json
+{
+  "data": [
+    { "id": 1, "name": "Documentation", "description": "Docs and technical writing tasks" },
+    { "id": 2, "name": "Bug Fixing", "description": "Bug reports and hotfixes" }
+  ]
+}
+```
+
+### POST /api/backlog-types
+**Request:**
+```json
+{ "name": "Documentation", "description": "Docs and technical writing tasks" }
+```
+**Response:** `201`
+```json
+{
+  "data": { "id": 3, "name": "Documentation", "description": "Docs and technical writing tasks" }
+}
+```
+
+---
+
+## Backlogs
+
+### GET /api/projects/:projectId/backlogs
+**Response:** `200`
+```json
+{
+  "data": [
+    { "id": 1, "name": "Development", "type": "development", "color": "#3B82F6", "order_index": 0, "is_default": true },
+    { "id": 2, "name": "QA/Testing", "type": "qa_testing", "color": "#10B981", "order_index": 1, "is_default": false }
+  ]
+}
+```
+
+### POST /api/projects/:projectId/backlogs
+**Request:**
+```json
+{ "name": "Development Backlog", "type": "development", "description": "...", "color": "#3B82F6" }
+```
+**Response:** `201`
+```json
+{
+  "data": { "id": 3, "project_id": 1, "name": "Development Backlog", "type": "development", "description": "...", "color": "#3B82F6", "order_index": 2, "is_default": false }
+}
+```
 
 ---
 

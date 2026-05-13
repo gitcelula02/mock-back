@@ -26,6 +26,9 @@
   "/api/projects/:id/chatroom": "/chatrooms?project_id=:id",
   "/api/projects/:id/daily-standups": "/daily_standups?project_id=:id",
 
+  "/api/backlog-types": "/backlog_types",
+  "/api/projects/:projectId/backlogs": "/backlogs?project_id=:projectId",
+
   "/api/tasks": "/tasks",
   "/api/tasks/my-tasks": "/task_assignees",
   "/api/tasks/:id": "/tasks/:id",
