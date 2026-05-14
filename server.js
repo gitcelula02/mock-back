@@ -54,6 +54,29 @@ server.post('/api/auth/login', async (req, res) => {
   });
 });
 
+server.get('/api/auth/me', (req, res) => {
+  const user = router.db.get('users').find({ id: 1 }).value();
+  if (!user) {
+    return res.status(401).json({
+      error: { code: 'UNAUTHORIZED', message: 'Not authenticated' }
+    });
+  }
+  res.json({
+    data: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      avatar_url: user.avatar_url,
+      default_language: user.default_language,
+      created_at: user.created_at
+    }
+  });
+});
+
+server.post('/api/auth/logout', (req, res) => {
+  res.status(204).send();
+});
+
 server.get('/api/tasks/:id', (req, res) => {
   const taskId = parseInt(req.params.id, 10);
   const task = router.db.get('tasks').find({ id: taskId }).value();
